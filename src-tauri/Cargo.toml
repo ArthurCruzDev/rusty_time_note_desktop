@@ -20,6 +20,7 @@ tauri = { version = "1.2", features = ["shell-open"] }
 rusqlite = { version="0.28", features = ["bundled"] }
 log = {version= "0.4" }
 fast_log = { version = "1.5" }
+chrono = {version = "^0"}
 
 [features]
 # by default Tauri runs in production mode

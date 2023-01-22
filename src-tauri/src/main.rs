@@ -25,14 +25,20 @@ fn main() {
     )
     .unwrap();
 
-    let db_manager = DBManager::new();
+    let db_manager = match DBManager::new() {
+        Ok(db_manager) => db_manager,
+        Err(error) => {
+            error!("Failed to migrate local database: {}", error.to_string());
+            logger.flush();
+            exit(-1);
+        }
+    };
 
     if let Err(error_string) = db_manager.migrate() {
         error!("Failed to migrate local database: {}", error_string);
         logger.flush();
         exit(-1);
     }
-
     tauri::Builder::default()
         .manage(db_manager)
         .invoke_handler(tauri::generate_handler![greet])
