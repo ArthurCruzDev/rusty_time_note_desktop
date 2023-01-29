@@ -144,7 +144,6 @@
     @apply text-5xl;
     font-family: Rubik;
     font-weight: 500;
-    @apply text-amber-600;
   }
   h2 {
     @apply text-3xl;
