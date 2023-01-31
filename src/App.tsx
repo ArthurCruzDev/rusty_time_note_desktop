@@ -2,10 +2,12 @@ import { Route, Routes } from "@solidjs/router";
 import { lazy, useContext } from "solid-js";
 import "./App.css";
 import { AppContext, AppContextProvider } from "./contexts/AppContext";
+
 const Homepage = lazy(() => import("./pages/Homepage"));
 
-function Router() {
+function RoutesComponent() {
   const [state] = useContext(AppContext);
+
   return (
     <div class={state.theme == "dark" ? "dark " : "light "}>
       <div class="w-screen h-screen dark:bg-neutral-900 bg-neutral-50">
@@ -20,7 +22,7 @@ function Router() {
 function App() {
   return (
     <AppContextProvider>
-      <Router />
+      <RoutesComponent />
     </AppContextProvider>
   );
 }

@@ -1,9 +1,11 @@
 import { useContext } from "solid-js";
 import { AppContextData } from "../@types/contexts/AppContext";
 import { AppContext } from "../contexts/AppContext";
+import i18next from "i18next";
 
 export default function Homepage() {
-  const [, { switchTheme }] = useContext(AppContext);
+  const [contextData, { switchTheme, switchLang }] = useContext(AppContext);
+  console.log(contextData.theme);
   return (
     <div class="w-100 flex flex-col">
       <h1
@@ -14,6 +16,14 @@ export default function Homepage() {
       >
         Rusty Time Note
       </h1>
+      <h2
+        onClick={() => {
+          switchLang?.();
+        }}
+      >
+        {"theme: " + contextData.theme}
+        {contextData.lang + " : " + contextData.t?.("key", "hello")}
+      </h2>
     </div>
   );
 }
