@@ -10,7 +10,7 @@ function RoutesComponent() {
 
   return (
     <div class={state.theme == "dark" ? "dark " : "light "}>
-      <div class="w-screen h-screen dark:bg-neutral-900 bg-neutral-50">
+      <div class="dark:bg-neutral-900 bg-neutral-50">
         <Routes>
           <Route path="/" component={Homepage} />
         </Routes>
