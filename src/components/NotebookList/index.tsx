@@ -140,7 +140,7 @@ export default function NotebookList(): JSX.Element {
   return (
     <div class="flex flex-col justify-center items-center h-full w-full overflow-y-auto">
       <div class="mt-5 mb-3 font-[Rubik] font-normal text-2xl w-96 text-center">
-        {contextData.t("selectANotebook")}
+        {contextData.t("components.NotebookList.selectANotebook")}
       </div>
       <span class="w-96 h-0.5 bg-indigo-300 mb-4"></span>
       <div class="h-full overflow-auto p-2">

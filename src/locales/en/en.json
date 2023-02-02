@@ -9,9 +9,9 @@
       "NotebookList": {
         "NewNotebookButton": {
           "newNotebookTitle": "New Notebook",
-          "newNotebookSubtitle": "Create New Notebook",
-          "selectANotebook": "Select a Notebook"
-        }
+          "newNotebookSubtitle": "Create New Notebook"
+        },
+        "selectANotebook": "Select a Notebook"
       }
     }
   }
