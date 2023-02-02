@@ -14,7 +14,7 @@ export default function Homepage() {
           switchTheme?.();
         }}
       >
-        Rusty Time Note
+        {contextData.t("pages.Homepage.appName")}
       </h1>
       {/* <h2
         onClick={() => {

@@ -1,5 +1,18 @@
 {
   "translation": {
-    "key": "hello world"
+    "pages": {
+      "Homepage": {
+        "appName": "Rusty Time Note"
+      }
+    },
+    "components": {
+      "NotebookList": {
+        "NewNotebookButton": {
+          "newNotebookTitle": "Novo Notebook",
+          "newNotebookSubtitle": "Criar Novo Notebook",
+          "selectANotebook": "Select a Notebook"
+        }
+      }
+    }
   }
 }

@@ -2,6 +2,7 @@ import { Route, Routes } from "@solidjs/router";
 import { lazy, useContext } from "solid-js";
 import "./App.css";
 import { AppContext, AppContextProvider } from "./contexts/AppContext";
+import NewNotebook from "./pages/notebooks/NewNotebook";
 
 const Homepage = lazy(() => import("./pages/Homepage"));
 
@@ -13,6 +14,7 @@ function RoutesComponent() {
       <div class="dark:bg-neutral-900 bg-neutral-50">
         <Routes>
           <Route path="/" component={Homepage} />
+          <Route path="/notebooks/new" component={NewNotebook} />
         </Routes>
       </div>
     </div>
