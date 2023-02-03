@@ -125,7 +125,7 @@
 }
 
 :root {
-  font-family: Cabin, Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Rubik, Inter, Avenir, Helvetica, Arial, sans-serif;
   font-size: 16px;
   line-height: 24px;
   font-weight: 400;
@@ -164,10 +164,20 @@
 @layer base {
   h1 {
     @apply text-5xl;
-    font-family: Rubik;
+    font-family: Cabin;
     font-weight: 500;
   }
   h2 {
+    font-family: Cabin;
     @apply text-3xl;
+  }
+  h3 {
+    font-family: Cabin;
+  }
+  h4 {
+    font-family: Cabin;
+  }
+  h5 {
+    font-family: Cabin;
   }
 }

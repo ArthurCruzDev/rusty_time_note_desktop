@@ -1,5 +1,17 @@
 {
   "translation": {
+    "constants": {
+      "NotebookColors": {
+        "red": "Red",
+        "purple": "Purple",
+        "blue": "Blue",
+        "green": "Green",
+        "yellow": "Yellow",
+        "orange": "Orange",
+        "gray": "Gray",
+        "black": "Black"
+      }
+    },
     "pages": {
       "Homepage": {
         "appName": "Rusty Time Note"
@@ -9,9 +21,18 @@
       "NotebookList": {
         "NewNotebookButton": {
           "newNotebookTitle": "New Notebook",
-          "newNotebookSubtitle": "Create New Notebook"
+          "newNotebookSubtitle": "Create a new notebook"
         },
         "selectANotebook": "Select a Notebook"
+      },
+      "forms": {
+        "NewNotebookForm": {
+          "nameField": "Name",
+          "nameFieldPlaceholder": "Choose a name for your notebook",
+          "descriptionField": "Description",
+          "descriptionFieldPlaceholder": "Enter a description for your notebook",
+          "colorField": "Color"
+        }
       }
     }
   }

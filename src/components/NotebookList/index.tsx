@@ -2,6 +2,7 @@ import { useNavigate } from "@solidjs/router";
 import { For, JSX, useContext } from "solid-js";
 import { NotebookData } from "../../@types/components/NotebookList/NotebookData";
 import { AppContext } from "../../contexts/AppContext";
+import { mapColorToClass } from "../../utils/GenericUtils";
 
 const mock: NotebookData[] = [
   {
@@ -46,29 +47,6 @@ const mock: NotebookData[] = [
     color: "black",
   },
 ];
-
-const mapColorToClass = (color: string) => {
-  switch (color) {
-    default:
-      return "bg-zinc-500";
-    case "red":
-      return "bg-red-700";
-    case "purple":
-      return "bg-purple-700";
-    case "blue":
-      return "bg-blue-700";
-    case "green":
-      return "bg-green-700";
-    case "yellow":
-      return "bg-yellow-700";
-    case "orange":
-      return "bg-orange-700";
-    case "gray":
-      return "bg-gray-700";
-    case "black":
-      return "bg-zinc-700";
-  }
-};
 
 function NotebookButton(prop: { notebookData: NotebookData }): JSX.Element {
   return (
