@@ -1,8 +1,9 @@
-import { Component, createEffect, useContext } from "solid-js";
+import { Component, useContext } from "solid-js";
 import { SelectInputOption } from "../../../@types/components/inputs/SelectInput";
 import { AppContext } from "../../../contexts/AppContext";
 import { mapColorToClass } from "../../../utils/GenericUtils";
-import { SelectInput } from "../../inputs/SelectInput/SelectInput";
+import { SelectInput } from "../../inputs/SelectInput";
+import { SubmitInput } from "../../inputs/SubmitInput";
 import { TextInput } from "../../inputs/TextInput";
 import { useNewNotebookForm } from "./newNotebookFormHook";
 
@@ -28,7 +29,7 @@ export const NewNotebookForm: Component = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} class="w-full">
+    <form onSubmit={handleSubmit} class="w-full flex flex-col items-center">
       <TextInput
         label={contextData.t("components.forms.NewNotebookForm.nameField")}
         placeholder={contextData.t(
@@ -49,18 +50,25 @@ export const NewNotebookForm: Component = () => {
         onChange={updateFormField("description")}
         class="mb-4 mt-4"
       />
-      <SelectInput
-        label={contextData.t("components.forms.NewNotebookForm.colorField")}
-        options={NOTEBOOK_COLORS}
-        value={form.color}
-        onChange={updateFormField("color")}
-      />
-      <div class="relative top-[-60px] left-[52px]">
-        <span
-          class={"block w-5 h-5 " + mapColorToClass(form.color ?? "bg-black")}
-        ></span>
+      <div class="w-full mb-4 mt-4 relative">
+        <SelectInput
+          label={contextData.t("components.forms.NewNotebookForm.colorField")}
+          options={NOTEBOOK_COLORS}
+          value={form.color}
+          onChange={updateFormField("color")}
+        />
+        <div class="absolute top-[4px] left-[52px]">
+          <span
+            class={
+              "block w-5 h-5 rounded-full " +
+              mapColorToClass(form.color ?? "bg-black")
+            }
+          ></span>
+        </div>
       </div>
-      <input class="form-submit" type="submit" value="Submit order" />
+      <div class="w-60">
+        <SubmitInput label="Criar" />
+      </div>
     </form>
   );
 };
