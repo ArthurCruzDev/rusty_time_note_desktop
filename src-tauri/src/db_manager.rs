@@ -3,7 +3,7 @@ const DB_MIGRATIONS_PATH: &str = "./migrations";
 
 use chrono::{DateTime, Local};
 use log::info;
-use rusqlite::Connection;
+use rusqlite::{Connection, Error, MappedRows, Params, Result, Row};
 use std::cmp::Ordering;
 use std::fmt;
 use std::fs::{self, DirEntry, File};
@@ -146,7 +146,7 @@ impl DBManager {
                 || file_name.cmp(last_migration.as_ref().unwrap().name.as_str())
                     == Ordering::Greater
             {
-                match self.read_migration_file_and_execute(file, &mutex) {
+                match DBManager::read_migration_file_and_execute(file, &mutex) {
                     Ok(_) => {
                         info!("Migration {} executed successfully!", &file_name);
                     }
@@ -165,7 +165,6 @@ impl DBManager {
     }
 
     fn read_migration_file_and_execute(
-        &self,
         file: &DirEntry,
         conn: &Connection,
     ) -> Result<(), MigrationError> {
@@ -223,5 +222,40 @@ impl DBManager {
         }
 
         Ok(())
+    }
+
+    pub fn execute_query<T, P, F>(
+        &self,
+        query: &str,
+        params: P,
+        map_function: F,
+    ) -> Result<Vec<Result<T>>, MigrationError>
+    where
+        P: Params,
+        F: FnMut(&Row<'_>) -> Result<T>,
+    {
+        let mutex = self.connection.lock().unwrap();
+
+        let mut stmt = match mutex.prepare(query) {
+            Ok(statement) => statement,
+            Err(error) => {
+                return Err(MigrationError {
+                    msg: error.to_string(),
+                })
+            }
+        };
+
+        let results = match stmt.query_map(params, map_function) {
+            Ok(mapped_rows) => mapped_rows,
+            Err(query_error) => {
+                return Err(MigrationError {
+                    msg: query_error.to_string(),
+                })
+            }
+        };
+
+        Ok(results.collect())
+
+        //retornar como lista pra ver se resolver problema de retorno de variável emprestada
     }
 }

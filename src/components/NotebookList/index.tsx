@@ -1,54 +1,11 @@
 import { useNavigate } from "@solidjs/router";
-import { For, JSX, useContext } from "solid-js";
-import { NotebookData } from "../../@types/components/NotebookList/NotebookData";
+import { invoke } from "@tauri-apps/api";
+import { createSignal, For, JSX, onMount, useContext } from "solid-js";
+import { Notebook } from "../../@types/entities/Notebook";
 import { AppContext } from "../../contexts/AppContext";
 import { mapColorToClass } from "../../utils/GenericUtils";
 
-const mock: NotebookData[] = [
-  {
-    title: "Notebook 1",
-    description: "Loren Ipsum dolor sit amet",
-    color: "red",
-  },
-  {
-    title: "Notebook 2 too long title eeeee eeee eeeee eeeeee",
-    description:
-      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-    color: "purple",
-  },
-  {
-    title: "Notebook 3",
-    description: "Loren Ipsum dolor sit amet",
-    color: "blue",
-  },
-  {
-    title: "Notebook 4",
-    description: "Loren Ipsum dolor sit amet",
-    color: "green",
-  },
-  {
-    title: "Notebook 5",
-    description: "Loren Ipsum dolor sit amet",
-    color: "yellow",
-  },
-  {
-    title: "Notebook 6",
-    description: "Loren Ipsum dolor sit amet",
-    color: "orange",
-  },
-  {
-    title: "Notebook 7",
-    description: "Loren Ipsum dolor sit amet",
-    color: "gray",
-  },
-  {
-    title: "Notebook 8",
-    description: "Loren Ipsum dolor sit amet",
-    color: "black",
-  },
-];
-
-function NotebookButton(prop: { notebookData: NotebookData }): JSX.Element {
+function NotebookButton(prop: { notebookData: Notebook }): JSX.Element {
   return (
     <button
       class="flex flex-row items-center h-28 w-96 bg-neutral-50 mb-4 
@@ -66,7 +23,7 @@ function NotebookButton(prop: { notebookData: NotebookData }): JSX.Element {
       </div>
       <div class="flex flex-col justify-start h-full p-2">
         <div class="text-left font-bold text-lg text-indigo-900 font-['Cabin'] whitespace-nowrap overflow-hidden text-ellipsis min-w-0 max-w-xs">
-          {prop.notebookData.title}
+          {prop.notebookData.name}
         </div>
         <div class="text-left font-normal text-sm text-zinc-900 font-['Rubik'] whitespace-pre-line overflow-y-clip min-w-0 min-h-0 max-w-xs max-h-14">
           {prop.notebookData.description}
@@ -115,6 +72,15 @@ function NewNotebookButton(): JSX.Element {
 
 export default function NotebookList(): JSX.Element {
   const [contextData] = useContext(AppContext);
+
+  const [notebooks, setNotebooks] = createSignal<Notebook[]>([]);
+
+  onMount(() => {
+    invoke("load_notebooks")
+      .then((notebooks) => setNotebooks(notebooks as Notebook[]))
+      .catch((error) => console.error(error));
+  });
+
   return (
     <div class="flex flex-col justify-center items-center h-full w-full overflow-y-auto">
       <div class="mt-5 mb-3 font-[Rubik] font-normal text-2xl w-96 text-center">
@@ -123,7 +89,7 @@ export default function NotebookList(): JSX.Element {
       <span class="w-96 h-0.5 bg-indigo-300 mb-4"></span>
       <div class="h-full overflow-auto p-2">
         <NewNotebookButton />
-        <For each={mock}>
+        <For each={notebooks()}>
           {(item) => <NotebookButton notebookData={item} />}
         </For>
       </div>

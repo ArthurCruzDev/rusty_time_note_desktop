@@ -4,15 +4,45 @@
 )]
 
 mod db_manager;
+mod entities;
 
 use db_manager::DBManager;
+use entities::notebook::Notebook;
 use fast_log::Config;
-use log::{error, Log};
+use log::{error, info, Log};
 use std::process::exit;
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
-fn greet(name: &str) -> String {
-    format!("Hello, {}! You've been greeted from Rust!", name)
+fn load_notebooks(db_manager: tauri::State<DBManager>) -> Result<Vec<Notebook>, String> {
+    match db_manager.execute_query("SELECT * FROM notebooks ORDER BY id ASC", [], |row| {
+        return Ok(Notebook {
+            id: row.get(0).unwrap(),
+            name: row.get(1).unwrap(),
+            description: row.get(2).unwrap(),
+            color: row.get(3).unwrap(),
+        });
+    }) {
+        Ok(query_results) => {
+            let mut final_vector = Vec::<Notebook>::new();
+            for result in query_results.iter() {
+                match result {
+                    Ok(notebook) => {
+                        final_vector.push(notebook.to_owned());
+                    }
+                    Err(error) => {
+                        error!("{}", error);
+                        return Err(error.to_string());
+                    }
+                }
+            }
+            Ok(final_vector)
+        }
+        Err(error) => {
+            error!("{}", error);
+            return Err(error.to_string());
+        }
+    }
 }
 
 fn main() {
@@ -39,9 +69,10 @@ fn main() {
         logger.flush();
         exit(-1);
     }
+
     tauri::Builder::default()
         .manage(db_manager)
-        .invoke_handler(tauri::generate_handler![greet])
+        .invoke_handler(tauri::generate_handler![load_notebooks])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
