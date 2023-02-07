@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS migrations (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name VARCHAR(150) NOT NULL,
+    execution_time DATETIME NOT NULL,
+    success BOOLEAN NOT NULL
+);

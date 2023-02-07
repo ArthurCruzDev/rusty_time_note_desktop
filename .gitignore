@@ -1,0 +1,14 @@
+node_modules
+dist
+
+.DS_*
+*.log
+logs
+**/*.backup.*
+**/*.back.*
+
+.vscode
+
+src-taurri/debug/
+src-taurri/target/
+src-taurri/Cargo.lock

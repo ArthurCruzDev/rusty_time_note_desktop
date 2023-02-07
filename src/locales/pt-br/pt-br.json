@@ -1,0 +1,39 @@
+{
+  "translation": {
+    "constants": {
+      "NotebookColors": {
+        "red": "Vermelho",
+        "purple": "Roxo",
+        "blue": "Azul",
+        "green": "Verde",
+        "yellow": "Amarelo",
+        "orange": "Laranja",
+        "gray": "Cinza",
+        "black": "Preto"
+      }
+    },
+    "pages": {
+      "Homepage": {
+        "appName": "Rusty Time Note"
+      }
+    },
+    "components": {
+      "NotebookList": {
+        "NewNotebookButton": {
+          "newNotebookTitle": "Novo Caderno",
+          "newNotebookSubtitle": "Criar Novo Caderno"
+        },
+        "selectANotebook": "Selecione um Caderno"
+      },
+      "forms": {
+        "NewNotebookForm": {
+          "nameField": "Nome",
+          "nameFieldPlaceholder": "Escolha um nome para seu caderno",
+          "descriptionField": "Descrição",
+          "descriptionFieldPlaceholder": "Insira uma descrição do seu caderno",
+          "colorField": "Cor"
+        }
+      }
+    }
+  }
+}
