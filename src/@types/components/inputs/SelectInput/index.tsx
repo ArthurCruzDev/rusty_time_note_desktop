@@ -9,4 +9,5 @@ export type SelectInputProps = {
   class?: string | undefined;
   label: string;
   options: SelectInputOption[];
+  validationMessage?: string | undefined;
 } & JSX.SelectHTMLAttributes<HTMLSelectElement>;

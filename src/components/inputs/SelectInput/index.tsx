@@ -1,4 +1,4 @@
-import { Component, For, splitProps } from "solid-js";
+import { Component, createSignal, For, splitProps } from "solid-js";
 import { SelectInputProps } from "../../../@types/components/inputs/SelectInput";
 
 export const SelectInput: Component<SelectInputProps> = (props) => {
@@ -6,12 +6,13 @@ export const SelectInput: Component<SelectInputProps> = (props) => {
     "label",
     "class",
     "options",
+    "validationMessage",
   ]);
   return (
     <div
       class={
         specificProps.class +
-        " flex flex-col justify-center items-start max-w-full w-full"
+        " flex flex-col justify-center items-start max-w-full w-full relative"
       }
     >
       <span class="text-lg font-normal mb-1">{specificProps.label}</span>
@@ -29,6 +30,11 @@ export const SelectInput: Component<SelectInputProps> = (props) => {
           {(item) => <option value={item.value}>{item.name}</option>}
         </For>
       </select>
+      {specificProps.validationMessage && (
+        <span class="absolute bottom-[-28px] right-0 text-red-600">
+          {specificProps.validationMessage}
+        </span>
+      )}
     </div>
   );
 };

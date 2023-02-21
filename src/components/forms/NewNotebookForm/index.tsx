@@ -1,14 +1,15 @@
-import { Component, useContext } from "solid-js";
+import { Component, createEffect, createSignal, useContext } from "solid-js";
 import { SelectInputOption } from "../../../@types/components/inputs/SelectInput";
 import { AppContext } from "../../../contexts/AppContext";
+import { useFormWithValidation } from "../../../hooks/FormWithValidationHook/indext";
 import { mapColorToClass } from "../../../utils/GenericUtils";
 import { SelectInput } from "../../inputs/SelectInput";
 import { SubmitInput } from "../../inputs/SubmitInput";
 import { TextInput } from "../../inputs/TextInput";
-import { useNewNotebookForm } from "./newNotebookFormHook";
 
 export const NewNotebookForm: Component = () => {
-  const { form, updateFormField, submit, clearField } = useNewNotebookForm();
+  const { submit, registerField, watchField, isFieldValid } =
+    useFormWithValidation();
   const [contextData, { switchTheme, switchLang }] = useContext(AppContext);
 
   const NOTEBOOK_COLORS: SelectInputOption[] = [
@@ -24,20 +25,36 @@ export const NewNotebookForm: Component = () => {
   ];
 
   const handleSubmit = (event: Event): void => {
-    event.preventDefault();
-    submit(form);
+    console.log("Form Submitted");
   };
 
+  const validateDescription = (fieldValue: string) => {
+    return fieldValue !== "" && fieldValue !== undefined ? true : false;
+  };
+
+  console.log("New Notebook Form Rendered");
+
   return (
-    <form onSubmit={handleSubmit} class="w-full flex flex-col items-center">
+    <form
+      onSubmit={(event) => submit(event, handleSubmit)}
+      class="w-full flex flex-col items-center"
+    >
       <TextInput
         label={contextData.t("components.forms.NewNotebookForm.nameField")}
         placeholder={contextData.t(
           "components.forms.NewNotebookForm.nameFieldPlaceholder"
         )}
-        value={form.name}
-        onChange={updateFormField("name")}
+        {...registerField("testeAltura")}
         class="mb-4 mt-4"
+        // validation={(value) => {
+        //   if (!value) {
+        //     return <span>É obrigatório informar um nome para o caderno</span>;
+        //   } else if (value.lenght <= 3) {
+        //     return <span>Nome precisa ter pelo menos 3 caracteres</span>;
+        //   } else {
+        //     return <></>;
+        //   }
+        // }}
       />
       <TextInput
         label={contextData.t(
@@ -46,27 +63,28 @@ export const NewNotebookForm: Component = () => {
         placeholder={contextData.t(
           "components.forms.NewNotebookForm.descriptionFieldPlaceholder"
         )}
-        value={form.description}
-        onChange={updateFormField("description")}
+        {...registerField("testeAltura2", validateDescription, true)}
         class="mb-4 mt-4"
+        validationMessage={
+          isFieldValid("testeAltura2") ? undefined : "testeAltura2 inválido"
+        }
       />
       <div class="w-full mb-4 mt-4 relative">
         <SelectInput
           label={contextData.t("components.forms.NewNotebookForm.colorField")}
           options={NOTEBOOK_COLORS}
-          value={form.color}
-          onChange={updateFormField("color")}
+          {...registerField("testeAltura3")}
         />
         <div class="absolute top-[4px] left-[52px]">
           <span
             class={
               "block w-5 h-5 rounded-full " +
-              mapColorToClass(form.color ?? "bg-black")
+              mapColorToClass(watchField("testeAltura3")?.value ?? "bg-black")
             }
           ></span>
         </div>
       </div>
-      <div class="w-60">
+      <div class="w-60 mt-4">
         <SubmitInput label="Criar" />
       </div>
     </form>
