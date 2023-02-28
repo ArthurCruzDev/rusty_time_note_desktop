@@ -1,11 +1,30 @@
+import { invoke } from "@tauri-apps/api";
 import { Component, createEffect, createSignal, useContext } from "solid-js";
 import { SelectInputOption } from "../../../@types/components/inputs/SelectInput";
+import { Notebook } from "../../../@types/entities/Notebook";
+import { FormWithValidationField } from "../../../@types/hooks/FormWithValidationHook";
 import { AppContext } from "../../../contexts/AppContext";
 import { useFormWithValidation } from "../../../hooks/FormWithValidationHook/indext";
 import { mapColorToClass } from "../../../utils/GenericUtils";
 import { SelectInput } from "../../inputs/SelectInput";
 import { SubmitInput } from "../../inputs/SubmitInput";
 import { TextInput } from "../../inputs/TextInput";
+
+const validateDescription = (fieldValue: string) => {
+  return fieldValue !== "" && fieldValue !== undefined ? true : false;
+};
+
+const validateName = (fieldValue: string) => {
+  return (
+    fieldValue !== undefined && fieldValue !== null && fieldValue.trim() !== ""
+  );
+};
+
+const validateColor = (fieldValue: string) => {
+  return (
+    fieldValue !== null && fieldValue !== undefined && fieldValue.trim() !== ""
+  );
+};
 
 export const NewNotebookForm: Component = () => {
   const { submit, registerField, watchField, isFieldValid } =
@@ -24,15 +43,22 @@ export const NewNotebookForm: Component = () => {
     { name: contextData.t("constants.NotebookColors.black"), value: "black" },
   ];
 
-  const handleSubmit = (event: Event): void => {
+  const handleSubmit = (formData: FormWithValidationField[]): void => {
     console.log("Form Submitted");
+    let notebook: Notebook = {
+      name: formData.find((field) => field.name === "Name")?.value ?? "",
+      description:
+        formData.find((field) => field.name === "Description")?.value ?? "",
+      color: formData.find((field) => field.name === "Color")?.value ?? "",
+    };
+    invoke("create_notebook", { notebook: notebook })
+      .then((response: any) => {
+        console.log(response);
+      })
+      .catch((error: any) => {
+        console.log("error", error);
+      });
   };
-
-  const validateDescription = (fieldValue: string) => {
-    return fieldValue !== "" && fieldValue !== undefined ? true : false;
-  };
-
-  console.log("New Notebook Form Rendered");
 
   return (
     <form
@@ -44,17 +70,15 @@ export const NewNotebookForm: Component = () => {
         placeholder={contextData.t(
           "components.forms.NewNotebookForm.nameFieldPlaceholder"
         )}
-        {...registerField("testeAltura")}
+        {...registerField("Name", validateName, true)}
+        validationMessage={
+          isFieldValid("Name")
+            ? undefined
+            : contextData.t(
+                "components.forms.NewNotebookForm.nameFieldInvalidMsg"
+              )
+        }
         class="mb-4 mt-4"
-        // validation={(value) => {
-        //   if (!value) {
-        //     return <span>É obrigatório informar um nome para o caderno</span>;
-        //   } else if (value.lenght <= 3) {
-        //     return <span>Nome precisa ter pelo menos 3 caracteres</span>;
-        //   } else {
-        //     return <></>;
-        //   }
-        // }}
       />
       <TextInput
         label={contextData.t(
@@ -63,29 +87,44 @@ export const NewNotebookForm: Component = () => {
         placeholder={contextData.t(
           "components.forms.NewNotebookForm.descriptionFieldPlaceholder"
         )}
-        {...registerField("testeAltura2", validateDescription, true)}
+        {...registerField("Description", validateDescription, true)}
         class="mb-4 mt-4"
         validationMessage={
-          isFieldValid("testeAltura2") ? undefined : "testeAltura2 inválido"
+          isFieldValid("Description")
+            ? undefined
+            : contextData.t(
+                "components.forms.NewNotebookForm.descriptionFieldInvalidMsg"
+              )
         }
       />
       <div class="w-full mb-4 mt-4 relative">
         <SelectInput
           label={contextData.t("components.forms.NewNotebookForm.colorField")}
           options={NOTEBOOK_COLORS}
-          {...registerField("testeAltura3")}
+          {...registerField("Color", validateColor, true)}
+          validationMessage={
+            isFieldValid("Color")
+              ? undefined
+              : contextData.t(
+                  "components.forms.NewNotebookForm.colorFieldInvalidMsg"
+                )
+          }
         />
         <div class="absolute top-[4px] left-[52px]">
           <span
             class={
               "block w-5 h-5 rounded-full " +
-              mapColorToClass(watchField("testeAltura3")?.value ?? "bg-black")
+              mapColorToClass(watchField("Color")?.value ?? "bg-black")
             }
           ></span>
         </div>
       </div>
       <div class="w-60 mt-4">
-        <SubmitInput label="Criar" />
+        <SubmitInput
+          label={contextData.t(
+            "components.forms.NewNotebookForm.submitButtonLabel"
+          )}
+        />
       </div>
     </form>
   );

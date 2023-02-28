@@ -29,9 +29,13 @@
         "NewNotebookForm": {
           "nameField": "Nome",
           "nameFieldPlaceholder": "Escolha um nome para seu caderno",
+          "nameFieldInvalidMsg": "Escolha um nome",
           "descriptionField": "Descrição",
           "descriptionFieldPlaceholder": "Insira uma descrição do seu caderno",
-          "colorField": "Cor"
+          "descriptionFieldInvalidMsg": "Forneceça uma descrição",
+          "colorField": "Cor",
+          "colorFieldInvalidMsg": "Selecione uma cor",
+          "submitButtonLabel": "Criar"
         }
       }
     }

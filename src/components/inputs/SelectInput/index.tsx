@@ -1,4 +1,4 @@
-import { Component, createSignal, For, splitProps } from "solid-js";
+import { Component, createSignal, For, Show, splitProps } from "solid-js";
 import { SelectInputProps } from "../../../@types/components/inputs/SelectInput";
 
 export const SelectInput: Component<SelectInputProps> = (props) => {
@@ -30,11 +30,11 @@ export const SelectInput: Component<SelectInputProps> = (props) => {
           {(item) => <option value={item.value}>{item.name}</option>}
         </For>
       </select>
-      {specificProps.validationMessage && (
+      <Show when={specificProps.validationMessage}>
         <span class="absolute bottom-[-28px] right-0 text-red-600">
           {specificProps.validationMessage}
         </span>
-      )}
+      </Show>
     </div>
   );
 };

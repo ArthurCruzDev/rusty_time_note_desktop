@@ -1,5 +1,8 @@
 import { createStore } from "solid-js/store";
-import { FormWithValidation } from "../../@types/hooks/FormWithValidationHook";
+import {
+  FormWithValidation,
+  FormWithValidationField,
+} from "../../@types/hooks/FormWithValidationHook";
 
 function useFormWithValidation<T extends Object>() {
   const [formData, setFormData] = createStore<FormWithValidation>({
@@ -58,12 +61,6 @@ function useFormWithValidation<T extends Object>() {
       let valid = oldField?.isValid;
       if (oldField?.validation) {
         if (oldField.validateAfterTouched) {
-          if (oldField.touched) {
-            valid = oldField.validation(oldField.value);
-          } else {
-            valid = true;
-          }
-        } else {
           valid = oldField.validation(oldField.value);
         }
       }
@@ -89,7 +86,10 @@ function useFormWithValidation<T extends Object>() {
     return formData.fields.find((data) => data.name === fieldName)?.isValid;
   }
 
-  const submit = (event: Event, externalSubmitFunction: Function) => {
+  const submit = (
+    event: Event,
+    externalSubmitFunction: (formData: FormWithValidationField[]) => void
+  ) => {
     event.preventDefault();
     let isFormValid = true;
 
@@ -108,7 +108,7 @@ function useFormWithValidation<T extends Object>() {
     );
 
     if (isFormValid) {
-      externalSubmitFunction();
+      externalSubmitFunction(formData.fields);
     }
   };
 

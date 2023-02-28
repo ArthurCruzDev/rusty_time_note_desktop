@@ -29,9 +29,13 @@
         "NewNotebookForm": {
           "nameField": "Name",
           "nameFieldPlaceholder": "Choose a name for your notebook",
+          "nameFieldInvalidMsg": "Choose a name",
           "descriptionField": "Description",
           "descriptionFieldPlaceholder": "Enter a description for your notebook",
-          "colorField": "Color"
+          "descriptionFieldInvalidMsg": "Give a description",
+          "colorField": "Color",
+          "colorFieldInvalidMsg": "Choose a color",
+          "submitButtonLabel": "Create"
         }
       }
     }

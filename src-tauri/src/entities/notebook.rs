@@ -9,3 +9,10 @@ pub struct Notebook {
 }
 
 impl Notebook {}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CreateNotebookDto {
+    pub name: String,
+    pub description: String,
+    pub color: String,
+}

@@ -7,7 +7,7 @@ mod db_manager;
 mod entities;
 
 use db_manager::DBManager;
-use entities::notebook::Notebook;
+use entities::notebook::{CreateNotebookDto, Notebook};
 use fast_log::Config;
 use log::{error, info, Log};
 use std::process::exit;
@@ -44,6 +44,15 @@ fn load_notebooks(db_manager: tauri::State<DBManager>) -> Result<Vec<Notebook>, 
         }
     }
 }
+#[tauri::command]
+fn create_notebook(
+    db_manager: tauri::State<DBManager>,
+    notebook: CreateNotebookDto,
+) -> Result<String, String> {
+    info!("submitted notebook: {:?}", notebook);
+
+    Ok("".to_string())
+}
 
 fn main() {
     let _ = std::fs::remove_file("./rusty_time_note.log");
@@ -72,7 +81,7 @@ fn main() {
 
     tauri::Builder::default()
         .manage(db_manager)
-        .invoke_handler(tauri::generate_handler![load_notebooks])
+        .invoke_handler(tauri::generate_handler![load_notebooks, create_notebook])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
