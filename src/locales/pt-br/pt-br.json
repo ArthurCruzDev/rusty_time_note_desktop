@@ -35,7 +35,10 @@
           "descriptionFieldInvalidMsg": "Forneceça uma descrição",
           "colorField": "Cor",
           "colorFieldInvalidMsg": "Selecione uma cor",
-          "submitButtonLabel": "Criar"
+          "submitButtonLabel": "Criar",
+          "msgLoading": "Criando notebook",
+          "msgSuccess": "Notebook criado com sucesso",
+          "msgError": "Falha ao criar notebook"
         }
       }
     }

@@ -10,6 +10,7 @@ use db_manager::DBManager;
 use entities::notebook::{CreateNotebookDto, Notebook};
 use fast_log::Config;
 use log::{error, info, Log};
+use rusqlite::params;
 use std::process::exit;
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
@@ -50,8 +51,15 @@ fn create_notebook(
     notebook: CreateNotebookDto,
 ) -> Result<String, String> {
     info!("submitted notebook: {:?}", notebook);
-
-    Ok("".to_string())
+    db_manager.execute_upsert_or_delete(
+        "INSERT INTO notebooks (name, description, color) VALUES(?, ?, ?)",
+        params![
+            notebook.name.as_str(),
+            notebook.description.as_str(),
+            notebook.color.as_str(),
+        ],
+    );
+    Ok("Notebook criado com sucesso".to_string())
 }
 
 fn main() {

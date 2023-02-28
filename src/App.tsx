@@ -1,5 +1,6 @@
 import { Route, Routes } from "@solidjs/router";
 import { lazy, useContext } from "solid-js";
+import { Toaster } from "solid-toast";
 import "./App.css";
 import { AppContext, AppContextProvider } from "./contexts/AppContext";
 import NewNotebook from "./pages/notebooks/NewNotebook";
@@ -11,6 +12,7 @@ function RoutesComponent() {
 
   return (
     <div class={state.theme == "dark" ? "dark " : "light "}>
+      <Toaster />
       <div class="dark:bg-neutral-900 bg-neutral-50">
         <Routes>
           <Route path="/" component={Homepage} />

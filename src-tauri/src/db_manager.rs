@@ -258,4 +258,22 @@ impl DBManager {
 
         //retornar como lista pra ver se resolver problema de retorno de variável emprestada
     }
+
+    pub fn execute_upsert_or_delete<P>(&self, query: &str, params: P) -> Result<(), MigrationError>
+    where
+        P: Params,
+    {
+        let mutex = self.connection.lock().unwrap();
+
+        let results = match mutex.execute(query, params) {
+            Ok(num_of_lines) => {}
+            Err(error) => {
+                return Err(MigrationError {
+                    msg: error.to_string(),
+                })
+            }
+        };
+
+        Ok(())
+    }
 }

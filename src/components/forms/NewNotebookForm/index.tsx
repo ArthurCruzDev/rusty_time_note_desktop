@@ -1,5 +1,13 @@
+import { useNavigate } from "@solidjs/router";
 import { invoke } from "@tauri-apps/api";
-import { Component, createEffect, createSignal, useContext } from "solid-js";
+import {
+  Component,
+  createEffect,
+  createSignal,
+  onCleanup,
+  useContext,
+} from "solid-js";
+import { toast } from "solid-toast";
 import { SelectInputOption } from "../../../@types/components/inputs/SelectInput";
 import { Notebook } from "../../../@types/entities/Notebook";
 import { FormWithValidationField } from "../../../@types/hooks/FormWithValidationHook";
@@ -9,6 +17,8 @@ import { mapColorToClass } from "../../../utils/GenericUtils";
 import { SelectInput } from "../../inputs/SelectInput";
 import { SubmitInput } from "../../inputs/SubmitInput";
 import { TextInput } from "../../inputs/TextInput";
+
+const TOAST_DELAY = 3000;
 
 const validateDescription = (fieldValue: string) => {
   return fieldValue !== "" && fieldValue !== undefined ? true : false;
@@ -26,10 +36,55 @@ const validateColor = (fieldValue: string) => {
   );
 };
 
+const customTimerToast = (msg: string, toastId?: string): string => {
+  return toast.custom(
+    (t) => {
+      const [life, setLife] = createSignal(100);
+      const startTime = Date.now();
+      createEffect(() => {
+        if (t.paused) return;
+        const interval = setInterval(() => {
+          const diff = Date.now() - startTime - t.pauseDuration;
+          setLife(100 - (diff / TOAST_DELAY) * 100);
+        });
+
+        onCleanup(() => clearInterval(interval));
+      });
+
+      return (
+        <div
+          class={`${
+            t.visible ? "animate-enter" : "animate-leave"
+          }  p-3 rounded-md shadow-md min-w-[150px]`}
+        >
+          <div class="flex">
+            <div class="flex flex-1 flex-col">
+              <div class="font-medium ">{msg}</div>
+            </div>
+          </div>
+          <div class="relative pt-4">
+            <div class="w-full h-1 rounded-full bg-indigo-300"></div>
+            <div
+              class="h-1 top-4 absolute rounded-full bg-indigo-900"
+              style={{ width: `${life()}%` }}
+            ></div>
+          </div>
+        </div>
+      );
+    },
+    {
+      duration: TOAST_DELAY,
+      id: toastId,
+      unmountDelay: 0,
+    }
+  );
+};
+
 export const NewNotebookForm: Component = () => {
   const { submit, registerField, watchField, isFieldValid } =
     useFormWithValidation();
   const [contextData, { switchTheme, switchLang }] = useContext(AppContext);
+  const navigation = useNavigate();
 
   const NOTEBOOK_COLORS: SelectInputOption[] = [
     // { name: "", value: "black" },
@@ -44,19 +99,35 @@ export const NewNotebookForm: Component = () => {
   ];
 
   const handleSubmit = (formData: FormWithValidationField[]): void => {
-    console.log("Form Submitted");
     let notebook: Notebook = {
       name: formData.find((field) => field.name === "Name")?.value ?? "",
       description:
         formData.find((field) => field.name === "Description")?.value ?? "",
       color: formData.find((field) => field.name === "Color")?.value ?? "",
     };
+    let notebookToast = toast.loading(
+      contextData.t("components.forms.NewNotebookForm.msgLoading")
+    );
+
     invoke("create_notebook", { notebook: notebook })
-      .then((response: any) => {
-        console.log(response);
+      .then((_) => {
+        customTimerToast(
+          contextData.t("components.forms.NewNotebookForm.msgSuccess"),
+          notebookToast
+        );
+        setTimeout(() => {
+          toast.dismiss(notebookToast);
+          navigation("/", { replace: true });
+        }, TOAST_DELAY + 200);
       })
       .catch((error: any) => {
-        console.log("error", error);
+        toast.error(
+          contextData.t("components.forms.NewNotebookForm.msgError"),
+          {
+            id: notebookToast,
+            duration: TOAST_DELAY - 100,
+          }
+        );
       });
   };
 
