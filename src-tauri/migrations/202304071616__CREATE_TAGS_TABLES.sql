@@ -1,0 +1,12 @@
+CREATE TABLE IF NOT EXISTS tags(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS timenotes_tags(
+    timenote_id INTEGER NOT NULL,
+    tag_id INTEGER NOT NULL,
+    FOREIGN KEY(timenote_id) REFERENCES timenotes(id) ON DELETE CASCADE,
+    FOREIGN KEY(tag_id) REFERENCES tags(id) ON DELETE CASCADE,
+    PRIMARY KEY(timenote_id, tag_id)
+);
