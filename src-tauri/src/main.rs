@@ -45,6 +45,7 @@ fn load_notebooks(db_manager: tauri::State<DBManager>) -> Result<Vec<Notebook>, 
         }
     }
 }
+
 #[tauri::command]
 fn create_notebook(
     db_manager: tauri::State<DBManager>,
@@ -60,6 +61,35 @@ fn create_notebook(
         ],
     );
     Ok("Notebook criado com sucesso".to_string())
+}
+
+#[tauri::command]
+fn load_notebook_by_id(db_manager: tauri::State<DBManager>, id: u32) -> Result<Notebook, String> {
+    match db_manager.execute_query("SELECT * FROM notebooks WHERE id = ?", [id], |row| {
+        return Ok(Notebook {
+            id: row.get(0).unwrap(),
+            name: row.get(1).unwrap(),
+            description: row.get(2).unwrap(),
+            color: row.get(3).unwrap(),
+        });
+    }) {
+        Ok(query_results) => match query_results.first() {
+            Some(notebook_result) => match notebook_result {
+                Ok(notebook) => {
+                    return Ok(notebook.to_owned());
+                }
+                Err(error) => {
+                    error!("{}", error);
+                    return Err(error.to_string());
+                }
+            },
+            None => Err("none".to_string()),
+        },
+        Err(error) => {
+            error!("{}", error);
+            return Err(error.to_string());
+        }
+    }
 }
 
 fn main() {
@@ -89,7 +119,11 @@ fn main() {
 
     tauri::Builder::default()
         .manage(db_manager)
-        .invoke_handler(tauri::generate_handler![load_notebooks, create_notebook])
+        .invoke_handler(tauri::generate_handler![
+            load_notebooks,
+            create_notebook,
+            load_notebook_by_id
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

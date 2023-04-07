@@ -6,12 +6,16 @@ import { AppContext } from "../../contexts/AppContext";
 import { mapColorToClass } from "../../utils/GenericUtils";
 
 function NotebookButton(prop: { notebookData: Notebook }): JSX.Element {
+  const navigation = useNavigate();
   return (
     <button
       class="flex flex-row items-center h-28 w-96 bg-neutral-50 mb-4 
               rounded-md drop-shadow-md
               border-solid border-2 border-l-0 border-neutral-400 
               hover:drop-shadow-lg hover:border-indigo-500"
+      onClick={() =>
+        navigation(`/notebooks/${prop.notebookData.id}`, { replace: true })
+      }
     >
       <div class="h-full mr-3">
         <span
@@ -90,7 +94,7 @@ export default function NotebookList(): JSX.Element {
       <div class="h-full overflow-auto p-2">
         <NewNotebookButton />
         <For each={notebooks()}>
-          {(item) => <NotebookButton notebookData={item} />}
+          {(item: Notebook) => <NotebookButton notebookData={item} />}
         </For>
       </div>
     </div>
