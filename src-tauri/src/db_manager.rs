@@ -201,7 +201,7 @@ impl DBManager {
             }
             Err(error) => {
                 match conn.execute(
-                    "INSERT INTO migrations(name, success) VALUES (?1, ?2)",
+                    "INSERT INTO migrations(name, execution_time, success) VALUES (?1, ?2, ?3)",
                     (&file_name, Local::now().to_rfc3339(), false),
                 ) {
                     Ok(_) => {}
