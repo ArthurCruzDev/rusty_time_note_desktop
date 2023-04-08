@@ -5,11 +5,11 @@ use chrono::{DateTime, Local};
 use log::info;
 use rusqlite::{Connection, Error, MappedRows, Params, Result, Row};
 use std::cmp::Ordering;
-use std::fmt;
 use std::fs::{self, DirEntry, File};
 use std::io::{BufReader, Read};
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
+use std::{fmt, num};
 
 pub struct MigrationEntity {
     pub id: u32,
@@ -50,7 +50,7 @@ impl DBManager {
         })
     }
 
-    pub fn migrate(&self) -> Result<(), MigrationError> {
+    pub async fn migrate(&self) -> Result<(), MigrationError> {
         let mut files: Vec<DirEntry> = match fs::read_dir(DB_MIGRATIONS_PATH) {
             Ok(paths) => paths
                 .map(|file| file.unwrap())
@@ -224,7 +224,7 @@ impl DBManager {
         Ok(())
     }
 
-    pub fn execute_query<T, P, F>(
+    pub async fn execute_query<T, P, F>(
         &self,
         query: &str,
         params: P,
@@ -259,7 +259,11 @@ impl DBManager {
         //retornar como lista pra ver se resolver problema de retorno de variável emprestada
     }
 
-    pub fn execute_upsert_or_delete<P>(&self, query: &str, params: P) -> Result<(), MigrationError>
+    pub async fn execute_upsert_or_delete<P>(
+        &self,
+        query: &str,
+        params: P,
+    ) -> Result<usize, MigrationError>
     where
         P: Params,
     {
@@ -273,7 +277,6 @@ impl DBManager {
                 })
             }
         };
-
-        Ok(())
+        Ok(1)
     }
 }
