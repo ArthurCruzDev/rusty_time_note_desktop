@@ -10,7 +10,7 @@ export default function NotebookPage() {
   const [notebook, setNotebook] = createSignal<Notebook | undefined>(undefined);
   const params = useParams();
   onMount(() => {
-    invoke("load_notebook_by_id", { id: parseInt(params.id) })
+    invoke("find_notebook_by_id", { id: parseInt(params.id) })
       .then((notebook) => setNotebook(notebook as Notebook))
       .catch((error) => console.error(error));
   });

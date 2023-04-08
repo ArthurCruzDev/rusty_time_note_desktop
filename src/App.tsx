@@ -3,11 +3,11 @@ import { Route, Routes } from "@solidjs/router";
 import { Toaster } from "solid-toast";
 import "./App.css";
 import { AppContext, AppContextProvider } from "./contexts/AppContext";
-import NewNotebook from "./pages/notebooks/NewNotebook";
-import NotebookPage from "./pages/notebooks/Notebook";
 import { useContext, lazy } from "solid-js";
 
 const Homepage = lazy(() => import("./pages/Homepage"));
+const NewNotebook = lazy(() => import("./pages/notebooks/NewNotebook"));
+const NotebookPage = lazy(() => import("./pages/notebooks/Notebook"));
 
 function RoutesComponent() {
   const [state] = useContext(AppContext);

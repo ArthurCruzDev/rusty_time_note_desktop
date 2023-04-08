@@ -3,7 +3,7 @@ const DB_MIGRATIONS_PATH: &str = "./migrations";
 
 use chrono::{DateTime, Local};
 use log::info;
-use rusqlite::{Connection, Error, MappedRows, Params, Result, Row};
+use rusqlite::{Connection, Params, Result, Row};
 use std::cmp::Ordering;
 use std::fs::{self, DirEntry, File};
 use std::io::{BufReader, Read};

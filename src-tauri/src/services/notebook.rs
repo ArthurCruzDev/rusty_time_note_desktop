@@ -3,10 +3,9 @@ use crate::{
     entities::notebook::{CreateNotebookDto, Notebook},
 };
 use log::{error, info};
-use rusqlite::params;
 
 #[tauri::command]
-pub async fn load_notebooks(
+pub async fn list_all_notebooks(
     db_manager: tauri::State<'_, DBManager>,
 ) -> Result<Vec<Notebook>, String> {
     match db_manager
@@ -62,7 +61,7 @@ pub async fn create_notebook(
 }
 
 #[tauri::command]
-pub async fn load_notebook_by_id(
+pub async fn find_notebook_by_id(
     db_manager: tauri::State<'_, DBManager>,
     id: u32,
 ) -> Result<Notebook, String> {

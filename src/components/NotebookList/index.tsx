@@ -80,7 +80,7 @@ export default function NotebookList(): JSX.Element {
   const [notebooks, setNotebooks] = createSignal<Notebook[]>([]);
 
   onMount(() => {
-    invoke("load_notebooks")
+    invoke("list_all_notebooks")
       .then((notebooks) => setNotebooks(notebooks as Notebook[]))
       .catch((error) => console.error(error));
   });
