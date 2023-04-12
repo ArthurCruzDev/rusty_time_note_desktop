@@ -64,7 +64,7 @@ pub async fn create_notebook(
 pub async fn find_notebook_by_id(
     db_manager: tauri::State<'_, DBManager>,
     id: u32,
-) -> Result<Notebook, String> {
+) -> Result<Option<Notebook>, String> {
     match db_manager
         .execute_query("SELECT * FROM notebooks WHERE id = ?", [id], |row| {
             return Ok(Notebook {
@@ -79,14 +79,14 @@ pub async fn find_notebook_by_id(
         Ok(query_results) => match query_results.first() {
             Some(notebook_result) => match notebook_result {
                 Ok(notebook) => {
-                    return Ok(notebook.to_owned());
+                    return Ok(Some(notebook.to_owned()));
                 }
                 Err(error) => {
                     error!("{}", error);
                     return Err(error.to_string());
                 }
             },
-            None => Err("none".to_string()),
+            None => return Ok(None),
         },
         Err(error) => {
             error!("{}", error);

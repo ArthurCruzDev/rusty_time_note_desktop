@@ -41,9 +41,12 @@ async fn main() -> Result<(), String> {
     tauri::Builder::default()
         .manage(db_manager)
         .invoke_handler(tauri::generate_handler![
+            //Notebook Service
             services::list_all_notebooks,
             services::create_notebook,
-            services::find_notebook_by_id
+            services::find_notebook_by_id,
+            //TimeNote Service
+            services::find_all_timenotes_by_notebook_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
