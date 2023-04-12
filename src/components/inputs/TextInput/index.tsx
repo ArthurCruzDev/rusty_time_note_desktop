@@ -14,7 +14,11 @@ export const TextInput: Component<TextInputProps> = (props) => {
         " flex flex-col justify-center items-start max-w-full w-full relative"
       }
     >
-      <span class="text-lg font-normal mb-1">{specificProps.label}</span>
+      <Show
+        when={specificProps.label !== undefined && specificProps.label !== ""}
+      >
+        <span class="text-lg font-normal mb-1">{specificProps.label}</span>
+      </Show>
       <input
         type="text"
         class="py-1 px-2 max-w-full w-full
