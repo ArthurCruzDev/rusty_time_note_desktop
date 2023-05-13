@@ -14,6 +14,8 @@ import { findNotebookById } from "../../services/NotebookService";
 import { TextInput } from "../../components/inputs/TextInput";
 import { TimeNote } from "../../@types/entities/TimeNote";
 import { findAllTimeNotesByNotebookId } from "../../services/TimeNoteService";
+import styles from "./Notebook.module.css";
+import dayjs from "dayjs";
 
 export default function NotebookPage() {
   const [contextData, { switchTheme, switchLang }] = useContext(AppContext);
@@ -47,7 +49,7 @@ export default function NotebookPage() {
                   class="mb-4 mt-4"
                 />
               </div>
-              <div class="w-full">
+              <div class="w-full flex flex-col items-center">
                 <Show
                   when={timeNotes() != undefined && timeNotes()?.length! > 0}
                   fallback={
@@ -58,8 +60,22 @@ export default function NotebookPage() {
                 >
                   <For each={timeNotes()}>
                     {(item: TimeNote) => (
-                      <div class="w-64">
+                      <div class={"w-3/4 p-5 " + styles.teste}>
                         <p>{item.description}</p>
+                        <div class="flex flex-row flex-wrap w-full">
+                          <div class="w-44">
+                            {dayjs(item.start_datetime).format(
+                              "DD/MM/YYYY HH:mm"
+                            )}
+                          </div>
+                          <div class="w-44">
+                            {item.finish_datetime
+                              ? dayjs(item.finish_datetime).format(
+                                  "DD/MM/YYYY HH:mm"
+                                )
+                              : " - "}
+                          </div>
+                        </div>
                       </div>
                     )}
                   </For>
