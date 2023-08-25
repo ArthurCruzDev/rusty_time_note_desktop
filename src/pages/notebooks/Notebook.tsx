@@ -16,6 +16,7 @@ import { TimeNote } from "../../@types/entities/TimeNote";
 import { findAllTimeNotesByNotebookId } from "../../services/TimeNoteService";
 import styles from "./Notebook.module.css";
 import dayjs from "dayjs";
+import AddNotebookButton from "../../components/AddNotebookButton";
 
 export default function NotebookPage() {
   const [contextData, { switchTheme, switchLang }] = useContext(AppContext);
@@ -36,6 +37,9 @@ export default function NotebookPage() {
     <div class="flex flex-col h-screen w-screen">
       <div class="fixed top-1 left-1">
         <BackButton returnTo="/" />
+      </div>
+      <div class="fixed top-1 right-1">
+        <AddNotebookButton returnTo="/" />
       </div>
       <Show when={notebook() !== undefined}>
         <div class="p-6 h-full w-full flex flex-col flex-nowrap items-center">

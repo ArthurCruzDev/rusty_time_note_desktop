@@ -5,11 +5,11 @@ use chrono::{DateTime, Local};
 use log::info;
 use rusqlite::{Connection, Params, Result, Row};
 use std::cmp::Ordering;
+use std::fmt;
 use std::fs::{self, DirEntry, File};
 use std::io::{BufReader, Read};
 use std::str::FromStr;
 use std::sync::{Arc, Mutex};
-use std::{fmt, num};
 
 pub struct MigrationEntity {
     pub id: u32,
@@ -269,8 +269,8 @@ impl DBManager {
     {
         let mutex = self.connection.lock().unwrap();
 
-        let results = match mutex.execute(query, params) {
-            Ok(num_of_lines) => {}
+        match mutex.execute(query, params) {
+            Ok(_num_of_lines) => {}
             Err(error) => {
                 return Err(MigrationError {
                     msg: error.to_string(),
